@@ -256,7 +256,7 @@
 
         const cardSwiper = new Swiper('.swiper-2', {
             slidesPerView: 4,
-            loop: true,
+            // loop: true,
             // freeMode: true,
 
             navigation: {
@@ -302,29 +302,37 @@
         });
 
         function updateVisibleSlides(swiperInstance) {
-            // Reset all slides to remove leftover styles
+            const visibleCount = 4; // You said always 4 visible
+            const slideWidthPercent = 100 / visibleCount;
+
+            // Reset all slides
             swiperInstance.slides.forEach(slide => {
                 slide.style.left = '';
                 slide.style.transform = '';
                 slide.style.zIndex = '';
 
-                // Remove previously bound event listeners if they exist
-                if (slide._hoverIn) slide.removeEventListener('mouseenter', slide._hoverIn);
-                if (slide._hoverOut) slide.removeEventListener('mouseleave', slide._hoverOut);
+                if (slide._hoverIn) {
+                    slide.removeEventListener('mouseenter', slide._hoverIn);
+                    slide._hoverIn = null;
+                }
+                if (slide._hoverOut) {
+                    slide.removeEventListener('mouseleave', slide._hoverOut);
+                    slide._hoverOut = null;
+                }
             });
 
-            const transforms = ['translateX(-0%)', 'translateX(-100%)', 'translateX(-200%)', 'translateX(-300%)'];
-            const lefts = ['0%', '25%', '50%', '75%'];
-
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < visibleCount; i++) {
                 const index = swiperInstance.activeIndex + i;
                 const slide = swiperInstance.slides[index];
                 if (!slide) continue;
 
-                slide.style.left = lefts[i];
+                const left = `${(i + 1) * slideWidthPercent}%`;
+                const transform = `translateX(-${(i + 1) * 100}%)`;
+
+                slide.style.left = left;
 
                 const hoverIn = () => {
-                    slide.style.transform = transforms[i];
+                    slide.style.transform = transform;
                     slide.style.zIndex = '11';
                 };
 
@@ -337,13 +345,15 @@
                     slide.addEventListener('transitionend', onTransitionEnd);
                 };
 
+                // Save hover functions so they can be removed next time
                 slide._hoverIn = hoverIn;
                 slide._hoverOut = hoverOut;
 
                 slide.addEventListener('mouseenter', hoverIn);
                 slide.addEventListener('mouseleave', hoverOut);
-            }
-        }
+            };
+        };
+
 
 
         function updateBackgroundScroll(swiperInstance) {
@@ -357,128 +367,6 @@
                 slide.querySelector('.swiper-slider-img').style.backgroundPosition = `${bgPosX}% center`;
             });
         }
-
-
-
-        // function updateFirstVisibleSlide(swiperInstance) {
-        //     swiperInstance.slides.forEach(slide => {
-        //         slide.style.transform = ''; // reset
-        //     });
-
-        //     const firstVisibleIndex = swiperInstance.activeIndex; // index of 2nd visible slide
-        //     const firstSlide = swiperInstance.slides[firstVisibleIndex];
-
-        //     firstSlide.style.left = '25%'
-
-        //     if (firstSlide) {
-        //         firstSlide.addEventListener('mouseover', () => {
-        //             firstSlide.style.transform = 'translateX(-100%)';
-        //             firstSlide.style.zIndex = '11';
-        //         });
-
-        //         firstSlide.addEventListener('mouseleave', () => {
-        //             firstSlide.style.transform = '';
-
-        //             const onTransitionEnd = () => {
-        //                 firstSlide.style.zIndex = '';
-        //                 firstSlide.removeEventListener('transitionend', onTransitionEnd);
-        //             };
-
-        //             firstSlide.addEventListener('transitionend', onTransitionEnd);
-        //         });
-        //     }
-        // }
-
-        // function updateSecondVisibleSlide(swiperInstance) {
-        //     swiperInstance.slides.forEach(slide => {
-        //         slide.style.transform = ''; // reset
-        //     });
-
-        //     const secondVisibleIndex = swiperInstance.activeIndex + 1; // index of 2nd visible slide
-        //     const secondSlide = swiperInstance.slides[secondVisibleIndex];
-
-        //     secondSlide.style.left = '25%'
-
-        //     if (secondSlide) {
-        //         secondSlide.addEventListener('mouseover', () => {
-        //             secondSlide.style.transform = 'translateX(-100%)';
-        //             secondSlide.style.zIndex = '11';
-        //         });
-
-        //         secondSlide.addEventListener('mouseleave', () => {
-        //             secondSlide.style.transform = '';
-
-        //             const onTransitionEnd = () => {
-        //                 secondSlide.style.zIndex = '';
-        //                 secondSlide.removeEventListener('transitionend', onTransitionEnd);
-        //             };
-
-        //             secondSlide.addEventListener('transitionend', onTransitionEnd);
-        //         });
-        //     }
-        // }
-
-        // function updateThirdVisibleSlide(swiperInstance) {
-        //     swiperInstance.slides.forEach(slide => {
-        //         slide.style.transform = ''; // reset
-        //     });
-
-        //     const thirdVisibleIndex = swiperInstance.activeIndex + 2; // index of 2nd visible slide
-        //     const thirdSlide = swiperInstance.slides[thirdVisibleIndex];
-
-        //     thirdSlide.style.left = '50%'
-            
-
-        //     if (thirdSlide) {
-        //         thirdSlide.addEventListener('mouseover', () => {
-        //             thirdSlide.style.transform = 'translateX(-200%)';
-        //             thirdSlide.style.zIndex = '11';
-        //         });
-
-        //         thirdSlide.addEventListener('mouseleave', () => {
-        //             thirdSlide.style.transform = '';
-
-        //             const onTransitionEnd = () => {
-        //                 thirdSlide.style.zIndex = '';
-        //                 thirdSlide.removeEventListener('transitionend', onTransitionEnd);
-        //             };
-
-        //             thirdSlide.addEventListener('transitionend', onTransitionEnd);
-        //         });
-        //     }
-
-        // }
-
-        // function updateFourthVisibleSlide(swiperInstance) {
-        //     swiperInstance.slides.forEach(slide => {
-        //         slide.style.transform = ''; // reset
-        //     });
-
-        //     const fourthVisibleIndex = swiperInstance.activeIndex + 3; // index of 2nd visible slide
-        //     const fourthSlide = swiperInstance.slides[fourthVisibleIndex];
-
-        //     fourthSlide.style.left = '75%'
-            
-
-        //     if (fourthSlide) {
-        //         fourthSlide.addEventListener('mouseover', () => {
-        //             fourthSlide.style.transform = 'translateX(-300%)';
-        //             fourthSlide.style.zIndex = '11';
-        //         });
-
-        //         fourthSlide.addEventListener('mouseleave', () => {
-        //             fourthSlide.style.transform = '';
-
-        //             const onTransitionEnd = () => {
-        //                 fourthSlide.style.zIndex = '';
-        //                 fourthSlide.removeEventListener('transitionend', onTransitionEnd);
-        //             };
-
-        //             fourthSlide.addEventListener('transitionend', onTransitionEnd);
-        //         });
-        //     }
-
-        // }
 
 
     </script>
