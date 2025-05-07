@@ -399,7 +399,9 @@
 }
 .slider-card{
     background-image: url(/assets/bg-1.jpg);
-    background-size: cover;
+    background-size: 100vw 100%;
+    background-clip: border-box;
+    background-attachment: fixed;
     background-position: center left;
     background-repeat: no-repeat;
     height: 100%;
@@ -408,7 +410,6 @@
     align-items: flex-start !important;
     justify-content: flex-end !important;
     padding: 30px;
-    transition: all 0.3s ease;
     /* flex-grow: 1;
     flex-shrink: 1;
     flex-basis: 0%; */
