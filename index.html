@@ -194,6 +194,13 @@
                 </div>
             </div>
         </div>
+        <div class="hover-zones">
+            <div class="hover-zone" data-index="0"></div>
+            <div class="hover-zone" data-index="1"></div>
+            <div class="hover-zone" data-index="2"></div>
+            <div class="hover-zone" data-index="3"></div>
+            <div class="hover-zone" data-index="4"></div>
+        </div>
         <div class="swiper-btn-next">
             <svg height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
             viewBox="0 0 223.413 223.413" xml:space="preserve">
@@ -265,7 +272,9 @@
 
         const cards = document.querySelectorAll('.slider-card');
         const swiper2Wrapper = document.querySelector('.swiper-2 .swiper-wrapper');
-        console.log(swiper2Wrapper);
+        const hoverZones = document.querySelectorAll('.hover-zone');
+
+        console.log(hoverZones);
         
 
         function getTranslateX(el) {
@@ -274,41 +283,47 @@
             return matrix.m41;
         }
 
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                cards.forEach(c => {
-                    if (c === card) {
-                        c.style.flexBasis = '100vw';
-                        c.style.flexGrow = '4';
-                        c.style.padding = '30px 30px'
-                        c.style.zIndex = '14'
-                    } else {
-                        c.style.flexBasis = '0';
-                        c.style.flexGrow = '0';
-                        c.style.padding = '30px 0px'
-                        c.style.zIndex = '1'
-                    }
-                    const translateX = getTranslateX(swiper2Wrapper);
+        hoverZones.forEach((zone, index) => {
+            zone.addEventListener('mouseenter', () => {
+                console.log('mousenetered');
+                
+                const translateX = getTranslateX(swiper2Wrapper);
 
-                    if (translateX < 0) {
-                        c.style.transform = 'translateX(25%)';
+                cards.forEach((card, i) => {
+                    if (i === index) {
+                        card.style.flexBasis = '100vw';
+                        card.style.flexGrow = '4';
+                        card.style.padding = '30px 30px';
+                        card.style.zIndex = '14';
+
+                        if (translateX < 0) {
+                            card.style.transform = 'translateX(25%)';
+                        } else {
+                            card.style.transform = 'translateX(0)';
+                        }
+
                     } else {
-                        c.style.transform = 'translateX(0)';
+                        card.style.flexBasis = '0';
+                        card.style.flexGrow = '0';
+                        card.style.padding = '30px 0px';
+                        card.style.zIndex = '1';
+                        card.style.transform = 'translateX(0)';
                     }
                 });
             });
 
-            card.addEventListener('mouseleave', () => {
-                cards.forEach(c => {
-                    c.style.flexBasis = '25vw';
-                    c.style.flexGrow = '1';
-                    c.style.padding = '30px 30px' 
-                    c.style.zIndex = '1'
-
-                    c.style.transform = 'translateX(0%)';
+            zone.addEventListener('mouseleave', () => {
+                cards.forEach(card => {
+                    card.style.flexBasis = '25vw';
+                    card.style.flexGrow = '1';
+                    card.style.padding = '30px 30px';
+                    card.style.zIndex = '1';
+                    card.style.transform = 'translateX(0%)';
                 });
             });
         });
+
+
 
         const swiper2 = new Swiper('.swiper-2', {
             slidesPerView: 4,

@@ -414,6 +414,7 @@
     flex-basis: 0%; */
     flex: 1 0 25vw;
     min-width: 0;
+    position: relative;
 }
 .slider-card._2{
     background-image: url(/assets/bg-2.jpg);
@@ -424,13 +425,22 @@
 .slider-card._4{
     background-image: url(/assets/banner-img-2.jpg);
 }
-.swiper-2 .swiper-slide.expanded {
+.hover-zones {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    z-index: 10;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    pointer-events: none; /* lets events through */
+    z-index: 100;
+}
+.hover-zone {
+    flex: 1 0 25%;
+    height: 100%;
+    pointer-events: all; /* each zone is hoverable */
+    background: transparent;
+    cursor: crosshair;
 }
 .slider-card-content{
     background-color: #ed5c28;
