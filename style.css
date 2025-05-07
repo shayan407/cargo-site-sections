@@ -379,6 +379,9 @@
     }
 }
 
+.swiper-container-wrapper{
+    position: relative;
+}
 .slider-main{
     height: 470px;
     display: flex;
@@ -426,8 +429,8 @@
 .slider-card._4{
     background-image: url(/assets/banner-img-2.jpg);
 }
-.hover-zones {
-    position: absolute;
+.swiper-hover-zones {
+    position: absolute !important;
     top: 0;
     left: 0;
     height: 100%;
@@ -441,7 +444,6 @@
     height: 100%;
     pointer-events: all; /* each zone is hoverable */
     background: transparent;
-    cursor: crosshair;
 }
 .slider-card-content{
     background-color: #ed5c28;
@@ -463,8 +465,8 @@
     color: rgba(255, 255, 255, 0.55);
     font-family: Inter;
 }
-.swiper-2 .swiper-btn-next,
-.swiper-2 .swiper-btn-prev{
+.swiper-container-wrapper .swiper-btn-next,
+.swiper-container-wrapper .swiper-btn-prev{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -479,16 +481,17 @@
     opacity: 0;
     transition: all 0.3s ease;
     cursor: pointer;
+    pointer-events: all;
 }
-.swiper-2 .swiper-btn-prev{
+.swiper-container-wrapper .swiper-btn-prev{
     left: 2%;
     top: 5%;
 }
-.swiper-2 .swiper-btn-next{
+.swiper-container-wrapper .swiper-btn-next{
     left: 6%;
     top: 5%;
 }
-.swiper-2:hover .swiper-btn-next,
-.swiper-2:hover .swiper-btn-prev{
+.swiper-container-wrapper:hover .swiper-btn-next,
+.swiper-container-wrapper:hover .swiper-btn-prev{
     opacity: 1;
 }
