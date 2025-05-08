@@ -502,11 +502,11 @@
     pointer-events: all;
 }
 .swiper-container-wrapper .swiper-btn-prev{
-    left: 2%;
+    left: 1.9vw;
     top: 5%;
 }
 .swiper-container-wrapper .swiper-btn-next{
-    left: 6%;
+    left: 6vw;
     top: 5%;
 }
 .swiper-container-wrapper:hover .swiper-btn-next,
@@ -531,10 +531,10 @@
         opacity: 1 !important;
     }
     .swiper-container-wrapper .swiper-btn-prev {
-        left: 4%;
+        left: 4vw;
     }
     .swiper-container-wrapper .swiper-btn-next {
-        left: 13%;
+        left: 13vw;
     }
 }
 @media(max-width: 767px){
@@ -545,9 +545,9 @@
         width: 80vw;
     }
     .swiper-container-wrapper .swiper-btn-prev {
-        left: 9%;
+        left: 9vw;
     }
     .swiper-container-wrapper .swiper-btn-next {
-        left: 30%;
+        left: 30vw;
     }
 }
