@@ -334,6 +334,7 @@
         const cards = document.querySelectorAll('.slider-card');
         const swiper2Wrapper = document.querySelector('.swiper-2 .swiper-wrapper');
         const hoverZones = document.querySelectorAll('.hover-zone');
+        let hoverTimeout;
 
         console.log(hoverZones);
 
@@ -360,47 +361,74 @@
             return '25vw'; // desktop
         }
 
-        hoverZones.forEach((zone, index) => {
-            zone.addEventListener('mouseenter', () => {
-                if (!isDesktop()) return;
+        
+        let isTransitioning = false;
+let pendingHoverIndex = null;
 
-                console.log('mouseentered');
+hoverZones.forEach((zone, index) => {
+    zone.addEventListener('mouseenter', () => {
+        if (!isDesktop()) return;
 
-                const translateX = getTranslateX(swiper2Wrapper);
+        if (isTransitioning) {
+            // Store intended hover for after unlock
+            pendingHoverIndex = index;
+            return;
+        }
 
-                cards.forEach((card, i) => {
-                    if (i === index) {
-                        card.style.flexBasis = '100vw';
-                        card.style.flexGrow = '4';
-                        card.style.padding = '30px 30px';
-                        card.style.zIndex = '14';
+        handleHover(index);
+    });
 
-                        if (translateX < 0) {
-                            card.style.transform = 'translateX(25%)';
-                        } else {
-                            card.style.transform = 'translateX(0)';
-                        }
-                    } else {
-                        card.style.flexBasis = '0';
-                        card.style.flexGrow = '0';
-                        card.style.padding = '30px 0px';
-                        card.style.zIndex = '1';
-                        card.style.transform = 'translateX(0)';
-                    }
-                });
-            });
+    zone.addEventListener('mouseleave', () => {
+        if (!isDesktop()) return;
 
-            zone.addEventListener('mouseleave', () => {
-                const responsiveBasis = getResponsiveFlexBasis();
-                cards.forEach(card => {
-                    card.style.flexBasis = responsiveBasis;
-                    card.style.flexGrow = '1';
-                    card.style.padding = '30px 30px';
-                    card.style.zIndex = '1';
-                    card.style.transform = 'translateX(0%)';
-                });
-            });
+        isTransitioning = true;
+
+        const responsiveBasis = getResponsiveFlexBasis();
+        cards.forEach(card => {
+            card.style.flexBasis = responsiveBasis;
+            card.style.flexGrow = '1';
+            card.style.padding = '30px 30px';
+            card.style.zIndex = '1';
+            card.style.transform = 'translateX(0%)';
         });
+
+        // After reset finishes, check if user is still hovering a new zone
+        setTimeout(() => {
+            isTransitioning = false;
+
+            if (pendingHoverIndex !== null) {
+                const idx = pendingHoverIndex;
+                pendingHoverIndex = null;
+                handleHover(idx);
+            }
+        }, 200); // adjust based on your transition duration
+    });
+});
+
+function handleHover(index) {
+    const translateX = getTranslateX(swiper2Wrapper);
+
+    cards.forEach((card, i) => {
+        if (i === index) {
+            card.style.flexBasis = '100vw';
+            card.style.flexGrow = '4';
+            card.style.padding = '30px 30px';
+            card.style.zIndex = '14';
+
+            if (translateX < 0) {
+                card.style.transform = 'translateX(25%)';
+            } else {
+                card.style.transform = 'translateX(0)';
+            }
+        } else {
+            card.style.flexBasis = '0';
+            card.style.flexGrow = '0';
+            card.style.padding = '30px 0px';
+            card.style.zIndex = '1';
+            card.style.transform = 'translateX(0)';
+        }
+    });
+}
 
 
 
