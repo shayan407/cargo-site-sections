@@ -422,7 +422,7 @@
 }
 .slider-card{
     background-image: url(/assets/bg-1.jpg);
-    background-size: 100vw 100%;
+    background-size: 100vw;
     background-clip: border-box;
     background-attachment: fixed;
     background-position: center left;
