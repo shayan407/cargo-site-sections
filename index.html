@@ -103,11 +103,12 @@
         </div>
 
         <div class="line-number-div">
-            <span class="num">01</span>
-            <span class="line"></span>
-            <span class="num">02</span>
+            <span class="num num-end">03</span>
+            <span class="line">
+                <span class="line-inner"></span>
+            </span>
+            <span class="num num-start">01</span>
         </div>
-        <!-- <div class="swiper-1-btns"> -->
             <div class="swiper-prev">
                     <svg height="800px" width="800px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                     viewBox="0 0 223.413 223.413" xml:space="preserve">
@@ -132,7 +133,6 @@
                     
                 </svg>
             </div>
-        <!-- </div> -->
     </div>
 
     <div class="image-change-section">
@@ -195,6 +195,30 @@
                     </div>
                 </div>
             </div>
+            <div class="swiper-btn-next">
+                <svg height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                viewBox="0 0 223.413 223.413" xml:space="preserve">
+                    <g>
+                        <g>
+                            <g>
+                                <polygon style="fill:#010002;" points="57.179,223.413 51.224,217.276 159.925,111.71 51.224,6.127 57.179,0 172.189,111.71 			
+                                    "/>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="swiper-btn-prev">
+                <svg height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 223.413 223.413" xml:space="preserve" fill="#000000" transform="rotate(180)">
+
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <g id="SVGRepo_iconCarrier"> <g> <g> <g> <polygon style="fill:#010002;" points="57.179,223.413 51.224,217.276 159.925,111.71 51.224,6.127 57.179,0 172.189,111.71 "/> </g> </g> </g> </g>
+                    
+                </svg>
+            </div>
         </div>
         <div class="slider-main swiper-hover-zones">
             <div class="swiper-wrapper hover-zones">
@@ -235,6 +259,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
+        let lineNumberStart = document.querySelector('.num-start');
+        let lineNumberEnd = document.querySelector('.num-end');
+        let line = document.querySelector('.line-inner');
+
+        function updateLineAndNumber(swiperInstance) {
+            const index = swiperInstance.realIndex + 1;
+            console.log(index);
+            
+            const totalSlides = swiperInstance.slides.length;
+
+            lineNumberStart.textContent = `0${index}`;
+            lineNumberEnd.textContent = `0${swiperInstance.slides.length}`;
+
+            const stepPercent = 100 / totalSlides;
+            const heightPercent = stepPercent * (index);
+            console.log(totalSlides,stepPercent,heightPercent);
+            
+
+            line.style.height = `${heightPercent}%`;
+        }
+
         const heroSwiper = new Swiper('.swiper-1', {
             slidesPerView: 1,
             loop: true,
@@ -244,7 +289,19 @@
                 nextEl: '.swiper-next',
                 prevEl: '.swiper-prev',
             },
+            on: {
+                init: function () {
+                    updateLineAndNumber(this);
+                },
+                slideChange: function () {
+                    updateLineAndNumber(this);
+                }
+            }
         });
+
+
+
+        
 
         document.querySelector('.swiper-prev').classList.remove('swiper-button-disabled');
 
@@ -279,18 +336,36 @@
         const hoverZones = document.querySelectorAll('.hover-zone');
 
         console.log(hoverZones);
-        
 
+        // Get translateX from element
         function getTranslateX(el) {
             const style = window.getComputedStyle(el);
             const matrix = new WebKitCSSMatrix(style.transform);
             return matrix.m41;
         }
 
+        // Check if current screen is desktop
+        function isDesktop() {
+            return window.innerWidth > 1024;
+        }
+
+        // Get responsive base flex-basis (used on mouseleave to reset)
+        function getResponsiveFlexBasis() {
+            const width = window.innerWidth;
+            if (width <= 1024 && width > 768) {
+                return '50vw'; // tablet
+            } else if (width <= 768) {
+                return '100vw'; // mobile
+            }
+            return '25vw'; // desktop
+        }
+
         hoverZones.forEach((zone, index) => {
             zone.addEventListener('mouseenter', () => {
-                console.log('mousenetered');
-                
+                if (!isDesktop()) return;
+
+                console.log('mouseentered');
+
                 const translateX = getTranslateX(swiper2Wrapper);
 
                 cards.forEach((card, i) => {
@@ -316,8 +391,9 @@
             });
 
             zone.addEventListener('mouseleave', () => {
+                const responsiveBasis = getResponsiveFlexBasis();
                 cards.forEach(card => {
-                    card.style.flexBasis = '25vw';
+                    card.style.flexBasis = responsiveBasis;
                     card.style.flexGrow = '1';
                     card.style.padding = '30px 30px';
                     card.style.zIndex = '1';
@@ -335,16 +411,37 @@
                 nextEl: '.swiper-btn-next',
                 prevEl: '.swiper-btn-prev',
             },
+            breakpoints: {
+                1024:{
+                    slidesPerView: 4
+                },
+                768:{
+                    slidesPerView: 2
+                },
+                320:{
+                    slidesPerView: 1
+                }
+            }
         });
 
         const swiperHover = new Swiper('.swiper-hover-zones', {
             slidesPerView: 4,
             loop: true,
-            // allowTouchMove: false,
             navigation: {
                 nextEl: '.swiper-btn-next',
                 prevEl: '.swiper-btn-prev',
-            }, // we only want it to follow the main swiper
+            },
+            breakpoints: {
+                1024:{
+                    slidesPerView: 4
+                },
+                768:{
+                    slidesPerView: 2
+                },
+                320:{
+                    slidesPerView: 1
+                }
+            }
         });
 
         // Sync both swipers
